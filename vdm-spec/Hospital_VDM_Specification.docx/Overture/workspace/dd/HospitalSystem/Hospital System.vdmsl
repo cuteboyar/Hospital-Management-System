@@ -1,0 +1,50 @@
+-- =====================
+-- TYPES
+-- =====================
+
+types
+
+Patient :: id : nat
+           name : seq of char;
+
+Doctor :: id : nat
+          name : seq of char;
+
+-- =====================
+-- STATE
+-- =====================
+
+state Hospital of
+    patients : set of Patient
+    doctors : set of Doctor
+    appointments : map Patient to Doctor
+init s ==
+    s = mk_Hospital({}, {}, {|->})
+end
+
+-- =====================
+-- OPERATIONS
+-- =====================
+
+operations
+
+RegisterPatient (p: Patient) ==
+(
+    patients := patients union {p}
+)
+pre p not in set patients
+post patients = patients~ union {p};
+
+BookAppointment (p: Patient, d: Doctor) ==
+(
+    appointments := appointments ++ {p |-> d}
+)
+pre p in set patients and d in set doctors
+post appointments = appointments~ ++ {p |-> d};
+
+CancelAppointment (p: Patient, d: Doctor) ==
+(
+    appointments := {p} <-: appointments
+)
+pre p in set dom appointments and appointments(p) = d
+post appointments = {p} <-: appointments~;
