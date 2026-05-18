@@ -1,0 +1,152 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Hospital Management System \\ Z Notation Model}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This document presents the formal Z notation model for the Hospital Management System. The model defines system states, invariants, and operations for managing patients, doctors, and appointments.
+
+\section{Basic Sets}
+
+\[
+[PATIENT, DOCTOR]
+\]
+
+\section{State Schema}
+
+\[
+\begin{schema}{HospitalSystem}
+patients : \mathcal{P} \ PATIENT \\
+doctors : \mathcal{P} \ DOCTOR \\
+appointments : PATIENT \leftrightarrow DOCTOR
+\where
+dom \ appointments \subseteq patients \\
+ran \ appointments \subseteq doctors
+\end{schema}
+\]
+
+\section{Initial State}
+
+\[
+\begin{schema}{InitHospitalSystem}
+HospitalSystem
+\where
+patients = \emptyset \\
+doctors = \emptyset \\
+appointments = \emptyset
+\end{schema}
+\]
+
+\section{Operations}
+
+\subsection{RegisterPatient}
+
+\[
+\begin{schema}{RegisterPatient}
+\Delta HospitalSystem \\
+newPatient? : PATIENT
+\where
+newPatient? \notin patients \\
+patients' = patients \cup \{newPatient?\} \\
+doctors' = doctors \\
+appointments' = appointments
+\end{schema}
+\]
+
+\subsection{AddDoctor}
+
+\[
+\begin{schema}{AddDoctor}
+\Delta HospitalSystem \\
+newDoctor? : DOCTOR
+\where
+newDoctor? \notin doctors \\
+doctors' = doctors \cup \{newDoctor?\} \\
+patients' = patients \\
+appointments' = appointments
+\end{schema}
+\]
+
+\subsection{BookAppointment}
+
+\[
+\begin{schema}{BookAppointment}
+\Delta HospitalSystem \\
+p? : PATIENT \\
+d? : DOCTOR
+\where
+p? \in patients \\
+d? \in doctors \\
+appointments' = appointments \cup \{(p?, d?)\} \\
+patients' = patients \\
+doctors' = doctors
+\end{schema}
+\]
+
+\subsection{CancelAppointment}
+
+\[
+\begin{schema}{CancelAppointment}
+\Delta HospitalSystem \\
+p? : PATIENT \\
+d? : DOCTOR
+\where
+(p?, d?) \in appointments \\
+appointments' = appointments \setminus \{(p?, d?)\} \\
+patients' = patients \\
+doctors' = doctors
+\end{schema}
+\]
+
+\section{State Transition Example}
+
+Before appointment booking:
+
+\[
+appointments = \emptyset
+\]
+
+After appointment booking:
+
+\[
+appointments = \{(Ali, DrAhsan)\}
+\]
+
+\section{Important Symbols}
+
+\begin{tabular}{|c|c|}
+\hline
+Symbol & Meaning \\
+\hline
+$\mathcal{P}$ & Power Set \\
+\hline
+$\leftrightarrow$ & Relation \\
+\hline
+$\in$ & Exists In \\
+\hline
+$\notin$ & Not Exists In \\
+\hline
+$\subseteq$ & Subset \\
+\hline
+$\cup$ & Union \\
+\hline
+$\emptyset$ & Empty Set \\
+\hline
+$\Delta$ & State Change \\
+\hline
+\end{tabular}
+
+\section{Conclusion}
+
+The Z notation model formally specifies the Hospital Management System using states, invariants, and operations. The model ensures consistency and correctness of patient, doctor, and appointment management.
+
+\end{document}
